@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -16,14 +17,13 @@ const Register = asyncHandler(async (req, res) => {
     // Encrypt password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(result.password, salt);
-
+    // role: result.role,:Removed this so no more admin can be registered.
     const newAccount = await loginSchema.create({
         name: result.name,
         email: result.email,
         password: hashedPassword,
         mobile: result.mobile,
         profileImage: result.profileImage,
-        role: result.role,
         address: result.address
     });
     res.status(constants.SUCCESSFUL_POST).json(`New account successfully registered: ${newAccount.name}`);
@@ -49,4 +49,23 @@ const login = asyncHandler(async (req, res) => {
     }
 });
 
-module.exports = { Register, login };
+//Get user information
+//get api/v1/account/info
+const info = asyncHandler(async (req, res) => {
+    const users = await loginSchema.find();
+    res.json(users);
+});
+
+//Delete user
+//delete api/v1/account/id:
+const deleteUser = asyncHandler(async (req, res) => {
+    const deleted = await loginSchema.findById(req.params.id);
+    if (!deleted) {
+        res.status(404).json({ message: "User not found" });
+    } else {
+        await loginSchema.deleteOne({ _id: req.params.id });
+        res.json({ message: "User deleted successfully" });
+    }
+});
+
+module.exports = { Register, login, info, deleteUser  };

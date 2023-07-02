@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const mongoose = require("mongoose");
 
 const ConnectDb = async () => {
@@ -10,7 +11,7 @@ const ConnectDb = async () => {
         );
     } catch (error) {
         console.log(error);
-        process.exit(1);
+        process.exit(1) ;
     }
 };
 module.exports = ConnectDb;

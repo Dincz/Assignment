@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const express = require("express");
 const app = express();
 const connectDb = require("./Database/mongoose");
@@ -16,6 +17,7 @@ app.use("/kiddo",(req, res)=>{
 });
 
 app.use("/api/v1/account", require("./routes/loginRoutes"));
+
 
 app.all("*", (req, res, next) => {
     const err = new CustomError(`Can't find ${req.originalUrl} on the server!`, constants.NOT_FOUND);
